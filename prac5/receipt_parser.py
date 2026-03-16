@@ -1,42 +1,25 @@
 import re
 import json
 
-# read file
 with open("raw.txt", "r") as file:
-    text = file.read()
+    data = file.read()
 
-# Extract prices
-prices = re.findall(r"\d+\.\d{2}", text)
+prices = re.findall(r'\d+\.\d{2}', data)
+products = re.findall(r'([A-Za-z]+)\s\d+\.\d{2}', data)
 
-# Extract products (word + price)
-products = re.findall(r"([A-Za-z]+)\s+(\d+\.\d{2})", text)
+date = re.search(r'\d{2}\.\d{2}\.\d{4}', data)
+time = re.search(r'\d{2}:\d{2}', data)
 
-# Extract date
-date = re.search(r"\d{2}/\d{2}/\d{4}", text)
+payment = re.search(r'Payment method:\s(\w+)', data)
 
-# Extract time
-time = re.search(r"\d{2}:\d{2}", text)
+total = sum(map(float, prices))
 
-# Extract payment method
-payment = re.search(r"Payment Method:\s*(\w+)", text)
-
-# Convert prices to float
-prices_float = [float(p) for p in prices]
-
-# Calculate total
-total = sum(prices_float)
-
-# Create structured data
-receipt = {
-    "date": date.group() if date else None,
-    "time": time.group() if time else None,
-    "products": [
-        {"name": name, "price": float(price)}
-        for name, price in products
-    ],
-    "total": round(total, 2),
-    "payment_method": payment.group(1) if payment else None
+result = {
+    "products": products,
+    "prices": prices,
+    "date": date.group(),
+    "time": time.group(),
+    "payment": payment.group(1),
+    "total": total
 }
-
-#Print JSON result
-print(json.dumps(receipt, indent=4))
+print(json.dumps(result, indent=4))
