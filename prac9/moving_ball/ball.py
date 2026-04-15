@@ -17,7 +17,7 @@ GREEN = (0, 255, 0)
 clock = pygame.time.Clock()
 
 # Игрок
-radius = 12
+radius = 11
 step = 4
 
 x = 40
@@ -25,7 +25,7 @@ y = 40
 
 # Враг
 enemy_size = 16
-enemy_speed = 2
+enemy_speed = 3
 
 enemy_x = 740
 enemy_y = 540
@@ -162,7 +162,7 @@ while running:
     )
 
     if player_rect.colliderect(enemy_rect):
-        print("Game Over!")
+        print("\033[31mGame Over!\033[0m")
         running = False
 
     finish_rect = pygame.Rect(
@@ -173,7 +173,7 @@ while running:
     )
 
     if player_rect.colliderect(finish_rect):
-        print("You Win!")
+        print("\033[32mYou Win!\033[0m")
         running = False
 
     screen.fill(WHITE)

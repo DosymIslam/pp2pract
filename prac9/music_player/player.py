@@ -4,7 +4,7 @@ import os
 pygame.init()
 pygame.mixer.init()
 
-screen = pygame.display.set_mode((600, 400))
+screen = pygame.display.set_mode((900, 600))
 pygame.display.set_caption("Music Player")
 
 font = pygame.font.Font(None, 30)
@@ -49,7 +49,7 @@ def load_background():
 
     background = pygame.transform.scale(
         background,
-        (600, 400)
+        (900, 600)
     )
 
 
@@ -194,7 +194,7 @@ while running:
             (10, 0, 0)
         )
 
-        screen.blit(status_text, (45, 320))
+        screen.blit(status_text, (45, 500))
 
     else:
 
