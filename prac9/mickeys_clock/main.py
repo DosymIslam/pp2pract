@@ -3,7 +3,7 @@ import datetime
 
 pygame.init()
 
-screen = pygame.display.set_mode((800, 800))
+screen = pygame.display.set_mode((800, 680))
 pygame.display.set_caption('Clock')
 clock = pygame.time.Clock()
 FPS = 50
