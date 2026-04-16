@@ -25,7 +25,7 @@ y = 40
 
 # Враг
 enemy_size = 16
-enemy_speed = 3
+enemy_speed = 2
 
 enemy_x = 740
 enemy_y = 540
@@ -35,7 +35,7 @@ finish_size = 30
 finish_x = enemy_x
 finish_y = enemy_y
 
-# Лабиринт
+# стены
 walls = [
 
     pygame.Rect(0, 0, 20, 250),
