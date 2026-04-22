@@ -6,6 +6,9 @@ import random
 pygame.init()
 pygame.mixer.init()
 
+# звук монетки
+coin_sound = pygame.mixer.Sound("coin_sound.mp3")
+
 FPS = 60
 FramePerSec = pygame.time.Clock()
 
@@ -17,6 +20,7 @@ WHITE = (255, 255, 255)
 
 SPEED = 5
 SCORE = 0
+COINS = 0
 
 # ================= ФОН =================
 
@@ -26,7 +30,6 @@ background = pygame.transform.scale(
     (SCREEN_WIDTH, SCREEN_HEIGHT)
 )
 
-# Фон Game Over
 game_over_bg = pygame.image.load("game_over_bg.png")
 game_over_bg = pygame.transform.scale(
     game_over_bg,
@@ -137,10 +140,88 @@ class Enemy(pygame.sprite.Sprite):
         self.hitbox.center = self.rect.center
 
 
+# ================= COIN =================
+
+class Coin(pygame.sprite.Sprite):
+
+    def __init__(self):
+
+        super().__init__()
+
+        # кадры анимации
+
+        self.frames = [
+
+            pygame.transform.scale(
+                pygame.image.load("coin1.png").convert_alpha(),
+                (40, 40)
+            ),
+
+            pygame.transform.scale(
+                pygame.image.load("coin2.png").convert_alpha(),
+                (40, 40)
+            ),
+
+            pygame.transform.scale(
+                pygame.image.load("coin3.png").convert_alpha(),
+                (40, 40)
+            ),
+
+            pygame.transform.scale(
+                pygame.image.load("coin4.png").convert_alpha(),
+                (40, 40)
+            )
+
+        ]
+
+        self.frame_index = 0
+        self.animation_speed = 0.2
+
+        self.image = self.frames[self.frame_index]
+
+        self.rect = self.image.get_rect()
+
+        self.hitbox = self.rect.inflate(-10, -10)
+
+        self.reset_position()
+
+    def reset_position(self):
+
+        lanes = [50, 150, 250, 350]
+
+        self.rect.center = (
+            random.choice(lanes),
+            random.randint(-600, -100)
+        )
+
+    def animate(self):
+
+        self.frame_index += self.animation_speed
+
+        if self.frame_index >= len(self.frames):
+
+            self.frame_index = 0
+
+        self.image = self.frames[int(self.frame_index)]
+
+    def move(self):
+
+        self.rect.move_ip(0, SPEED)
+
+        if self.rect.top > SCREEN_HEIGHT:
+
+            self.reset_position()
+
+        self.animate()
+
+        self.hitbox.center = self.rect.center
+
+
 # ================= ОБЪЕКТЫ =================
 
 P1 = Player()
 E1 = Enemy()
+C1 = Coin()
 
 enemies = pygame.sprite.Group()
 enemies.add(E1)
@@ -148,6 +229,7 @@ enemies.add(E1)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(P1)
 all_sprites.add(E1)
+all_sprites.add(C1)
 
 INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
@@ -182,7 +264,7 @@ while True:
     DISPLAYSURF.blit(background, (0, bg_y1))
     DISPLAYSURF.blit(background, (0, bg_y2))
 
-    # SCORE
+    # счетчики
 
     score_text = font_small.render(
         "Score: " + str(SCORE),
@@ -190,7 +272,14 @@ while True:
         BLACK
     )
 
+    coin_text = font_small.render(
+        "Coins: " + str(COINS),
+        True,
+        BLACK
+    )
+
     DISPLAYSURF.blit(score_text, (10, 10))
+    DISPLAYSURF.blit(coin_text, (10, 40))
 
     # движение объектов
 
@@ -203,8 +292,17 @@ while True:
             entity.rect
         )
 
+    # подбор монетки
 
-    # СТОЛКНОВЕНИЕ
+    if P1.hitbox.colliderect(C1.hitbox):
+
+        COINS += 1
+
+        coin_sound.play()
+
+        C1.reset_position()
+
+    # столкновение с врагом
 
     for enemy in enemies:
 
@@ -223,28 +321,25 @@ while True:
                     (0, 0)
                 )
 
-                
-
                 score_text = font_medium.render(
                     f"Score: {SCORE}",
                     True,
                     WHITE
                 )
 
-                DISPLAYSURF.blit(
-                    score_text,
-                    (165, 240)
+                coins_text = font_medium.render(
+                    f"Coins: {COINS}",
+                    True,
+                    WHITE
                 )
+
+                DISPLAYSURF.blit(score_text, (165, 240))
+                DISPLAYSURF.blit(coins_text, (165, 270))
 
                 restart_text = font_medium.render(
                     "Press R to Restart",
                     True,
                     WHITE
-                )
-
-                DISPLAYSURF.blit(
-                    restart_text,
-                    (109, 460)
                 )
 
                 exit_text = font_medium.render(
@@ -253,10 +348,8 @@ while True:
                     WHITE
                 )
 
-                DISPLAYSURF.blit(
-                    exit_text,
-                    (109, 500)
-                )
+                DISPLAYSURF.blit(restart_text, (109, 460))
+                DISPLAYSURF.blit(exit_text, (109, 500))
 
                 pygame.display.update()
 
@@ -272,6 +365,7 @@ while True:
                         if event.key == K_r:
 
                             SCORE = 0
+                            COINS = 0
                             SPEED = 5
 
                             P1.rect.center = (
@@ -281,6 +375,8 @@ while True:
 
                             for enemy in enemies:
                                 enemy.reset_position()
+
+                            C1.reset_position()
 
                             game_over_screen = False
 
