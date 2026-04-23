@@ -17,8 +17,6 @@ screen = pygame.display.set_mode(
 
 pygame.display.set_caption("Paint")
 
-screen.fill(WHITE)
-
 canvas = pygame.Surface((WIDTH, HEIGHT))
 canvas.fill(WHITE)
 
@@ -32,13 +30,13 @@ tool_icons = {
     "save": pygame.image.load("img/save.png")
 }
 
-# ================= КНОПКИ ИНСТРУМЕНТОВ =================
+# ================= КНОПКИ =================
 
 tool_buttons = {}
 
 x_offset = 10
 
-for tool, icon in tool_icons.items():
+for tool in tool_icons:
 
     tool_buttons[tool] = pygame.Rect(
         x_offset,
@@ -49,7 +47,6 @@ for tool, icon in tool_icons.items():
 
     x_offset += 50
 
-# ================= КНОПКИ ЦВЕТОВ =================
 
 color_buttons = {
     (0, 0, 0): pygame.Rect(300, HEIGHT + 10, 40, 40),
@@ -59,7 +56,7 @@ color_buttons = {
     (255, 255, 0): pygame.Rect(500, HEIGHT + 10, 40, 40),
     (255, 165, 0): pygame.Rect(550, HEIGHT + 10, 40, 40),
     (128, 0, 128): pygame.Rect(600, HEIGHT + 10, 40, 40),
-    (255, 255, 255): pygame.Rect(650, HEIGHT + 10, 40, 40)  # БЕЛЫЙ
+    (255, 255, 255): pygame.Rect(650, HEIGHT + 10, 40, 40)
 }
 
 clock = pygame.time.Clock()
@@ -126,7 +123,7 @@ def draw_circle(surface, color, center, radius):
         color,
         center,
         radius,
-        0 if mode == "circle" else size
+        0
     )
 
     shapes.append(
@@ -148,7 +145,7 @@ def draw_rect(surface, color, start, end):
         surface,
         color,
         rect,
-        0 if mode == "rect" else size
+        0
     )
 
     shapes.append(
@@ -164,35 +161,9 @@ def save_image():
     )
 
 
-def redraw_shapes():
-
-    canvas.fill(WHITE)
-
-    for shape in shapes:
-
-        if shape[0] == "rect":
-
-            pygame.draw.rect(
-                canvas,
-                shape[1],
-                shape[2],
-                size
-            )
-
-        elif shape[0] == "circle":
-
-            pygame.draw.circle(
-                canvas,
-                shape[1],
-                shape[2],
-                shape[3],
-                size
-            )
-
-
 def redraw_canvas():
 
-    redraw_shapes()
+    screen.fill(WHITE)
 
     screen.blit(canvas, (0, 0))
 
@@ -231,24 +202,19 @@ while running:
                     if rect.collidepoint(event.pos):
 
                         if tool == "brush":
-
                             mode = "pen"
 
                         elif tool == "clear":
-
                             canvas.fill(WHITE)
                             shapes.clear()
 
                         elif tool == "eraser":
-
                             mode = "eraser"
 
                         elif tool == "save":
-
                             save_image()
 
                         elif tool == "cursor":
-
                             mode = "move"
 
                 for color_value, rect in color_buttons.items():
@@ -319,12 +285,10 @@ while running:
             elif mode == "circle":
 
                 radius = int(
-
                     (
                         (event.pos[0] - start_pos[0]) ** 2
                         +
                         (event.pos[1] - start_pos[1]) ** 2
-
                     ) ** 0.5
                 )
 
