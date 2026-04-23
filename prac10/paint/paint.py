@@ -133,12 +133,17 @@ def draw_circle(surface, color, center, radius):
 
 def draw_rect(surface, color, start, end):
 
+    x = min(start[0], end[0])
+    y = min(start[1], end[1])
+
+    width = abs(end[0] - start[0])
+    height = abs(end[1] - start[1])
+
     rect = pygame.Rect(
-        start,
-        (
-            end[0] - start[0],
-            end[1] - start[1]
-        )
+        x,
+        y,
+        width,
+        height
     )
 
     pygame.draw.rect(
@@ -180,7 +185,6 @@ def redraw_canvas():
         (10, HEIGHT - 20)
     )
 
-
 # ================= ГЛАВНЫЙ ЦИКЛ =================
 
 while running:
@@ -190,8 +194,25 @@ while running:
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
-
             running = False
+
+        # ===== ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ =====
+
+        elif event.type == pygame.KEYDOWN:
+
+            if event.key == pygame.K_r:
+                mode = "rect"
+
+            elif event.key == pygame.K_c:
+                mode = "circle"
+
+            elif event.key == pygame.K_p:
+                mode = "pen"
+
+            elif event.key == pygame.K_e:
+                mode = "eraser"
+
+        # ===== НАЖАТИЕ МЫШИ =====
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
@@ -220,7 +241,6 @@ while running:
                 for color_value, rect in color_buttons.items():
 
                     if rect.collidepoint(event.pos):
-
                         color = color_value
 
             else:
