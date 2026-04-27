@@ -1,7 +1,7 @@
 import pygame
 import random
 
-LANES = [50, 150, 250, 350]
+LANES = [60, 150, 250, 335]
 
 
 def load(file, size):

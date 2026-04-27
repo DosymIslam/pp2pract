@@ -1,17 +1,53 @@
 import pygame
 from persistence import load_leaderboard
 
-WHITE = (255, 255, 255)
+
+# --- Загрузка фоновых изображений ---
+
+menu_bg = pygame.image.load(
+    "assets/menu_bg.png"
+)
+
+settings_bg = pygame.image.load(
+    "assets/settings_bg.png"
+)
+
+leaderboard_bg = pygame.image.load(
+    "assets/leaderboard_bg.png"
+)
+
+# растянуть под размер окна
+
+menu_bg = pygame.transform.scale(
+    menu_bg,
+    (400, 600)
+)
+
+settings_bg = pygame.transform.scale(
+    settings_bg,
+    (400, 600)
+)
+
+leaderboard_bg = pygame.transform.scale(
+    leaderboard_bg,
+    (400, 600)
+)
+
+WHITE = (230, 230, 230)
 BLACK = (0, 0, 0)
+REDDER=(100,0,0)
+GREY=(150,150,150)
+BLUE=(0,0,90)
+GREEN=(0,60,0)
 
 
 def get_font():
 
     return pygame.font.SysFont(
         "Verdana",
-        18
+        20,
+        bold=True
     )
-
 
 def draw_text(screen, text, x, y):
 
@@ -21,93 +57,74 @@ def draw_text(screen, text, x, y):
         font.render(
             text,
             True,
-            BLACK
+            GREY
         ),
         (x, y)
     )
 
 
+
+
 def draw_menu(screen):
 
-    screen.fill(WHITE)
-
-    draw_text(
-        screen,
-        "TSIS 3 RACER",
-        130,
-        150
-    )
+    screen.blit(menu_bg, (0, 0))
 
     draw_text(
         screen,
         "1 - Play",
-        150,
-        250
+        30,
+        270
     )
 
     draw_text(
         screen,
         "2 - Leaderboard",
-        150,
-        300
+        30,
+        320
     )
 
     draw_text(
         screen,
         "3 - Settings",
-        150,
-        350
+        30,
+        370
     )
 
     
 
 def draw_settings(screen, settings):
 
-    screen.fill(WHITE)
-
-    draw_text(
-        screen,
-        "SETTINGS",
-        150,
-        150
-    )
+    screen.blit(settings_bg, (0, 0))
 
     draw_text(
         screen,
         f"Sound: {settings['sound']}",
-        120,
+        30,
         250
     )
 
     draw_text(
         screen,
         "S - Toggle sound",
-        100,
-        400
+        30,
+        300
     )
 
     draw_text(
         screen,
         "ESC - Back",
-        100,
+        30,
         500
     )
 
 
 def draw_leaderboard(screen):
 
-    screen.fill(WHITE)
+    screen.blit(leaderboard_bg, (0, 0))
 
     data = load_leaderboard()
 
-    draw_text(
-        screen,
-        "LEADERBOARD",
-        130,
-        80
-    )
-
-    y = 150
+    y = 180
 
     for i, row in enumerate(data):
 
@@ -130,46 +147,59 @@ def draw_leaderboard(screen):
     draw_text(
         screen,
         "ESC - Back",
-        140,
-        520
+        10,
+        700
     )
 
 
 def draw_game_over(screen, score, distance):
 
-    screen.fill(WHITE)
+    # загрузка картинки
+    img = pygame.image.load(
+        "assets/game_over.png"
+    ).convert()
 
-    draw_text(
-        screen,
-        "GAME OVER",
-        140,
-        200
+    # растянуть под размер окна
+    img = pygame.transform.scale(
+        img,
+        (400, 600)
     )
 
-    draw_text(
-        screen,
+    # нарисовать фон
+    screen.blit(img, (0, 0))
+
+    # текст поверх картинки
+
+    font = pygame.font.SysFont(
+        "Verdana",
+        20
+    )
+
+    text1 = font.render(
         f"Score: {score}",
-        140,
-        260
+        True,
+        (255, 255, 255)
     )
 
-    draw_text(
-        screen,
+    text2 = font.render(
         f"Distance: {distance}",
-        120,
-        300
+        True,
+        (255, 255, 255)
     )
 
-    draw_text(
-        screen,
+    text3 = font.render(
         "R - Retry",
-        150,
-        380
+        True,
+        (255, 255, 255)
     )
 
-    draw_text(
-        screen,
+    text4 = font.render(
         "M - Menu",
-        150,
-        420
+        True,
+        (255, 255, 255)
     )
+
+    screen.blit(text1, (120, 260))
+    screen.blit(text2, (110, 300))
+    screen.blit(text3, (140, 380))
+    screen.blit(text4, (140, 420))
