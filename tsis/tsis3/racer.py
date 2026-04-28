@@ -95,6 +95,7 @@ def reset_game(assets):
         "bg2": -600,
 
         "score": 0,
+        "coins_collected":0,
         "distance": 0
     }
 
@@ -108,7 +109,12 @@ def spawn_coin(g):
         35
     )
 
-    g["coins"].append(rect)
+    value=random.choice([1,3,5])
+
+    g["coins"].append({
+        "rect": rect,
+        "value":value
+    })
 
 
 def spawn_power(g):
@@ -161,7 +167,7 @@ def update_game(g):
 
     # ---------------- ENEMY ----------------
 
-    g["enemy"].y += g["speed"]
+    g["enemy"].y += g["speed"]+1
 
     if g["player"].colliderect(g["enemy"]):
         return "game_over"
@@ -198,17 +204,19 @@ def update_game(g):
 
     for c in g["coins"][:]:
 
-        c.y += g["speed"]
+        c["rect"].y += g["speed"]
 
-        if g["player"].colliderect(c):
+        if g["player"].colliderect(c["rect"]):
 
             a["coin_sound"].play()
 
-            g["score"] += 5
+            g["score"] += c["value"]
+
+            g["coins_collected"]+=1
 
             g["coins"].remove(c)
 
-        elif c.top > 600:
+        elif c["rect"].top > 600:
 
             g["coins"].remove(c)
 
@@ -264,6 +272,11 @@ def update_game(g):
 
             g["obstacles"].remove(o)
 
+    # ускорение каждые 5 монет
+
+    if g["coins_collected"] % 5 == 0 and g["coins_collected"] != 0:
+        g["speed"] += 0.02
+
     # ---------------- TIMER ----------------
 
     if g["power_timer"] > 0:
@@ -294,7 +307,7 @@ def draw_game(screen, g):
         screen.blit(a["obstacle"], o)
 
     for c in g["coins"]:
-        screen.blit(a["coin"], c)
+        screen.blit(a["coin"], c["rect"])
 
     for p in g["powerups"]:
 
@@ -319,6 +332,14 @@ def draw_game(screen, g):
         ),
         (10, 10)
     )
+    screen.blit(
+    font.render(
+        f"Coins: {g['coins_collected']}",
+        True,
+        (0, 0, 0)
+    ),
+    (10, 100)
+)
 
     screen.blit(
         font.render(

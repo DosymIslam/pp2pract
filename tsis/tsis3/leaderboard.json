@@ -6,6 +6,16 @@
     },
     {
         "name": "Player",
+        "score": 106,
+        "distance": 141
+    },
+    {
+        "name": "Player",
+        "score": 61,
+        "distance": 49
+    },
+    {
+        "name": "Player",
         "score": 53,
         "distance": 57
     },
@@ -21,6 +31,16 @@
     },
     {
         "name": "Player",
+        "score": 39,
+        "distance": 65
+    },
+    {
+        "name": "Player",
+        "score": 37,
+        "distance": 48
+    },
+    {
+        "name": "Player",
         "score": 35,
         "distance": 48
     },
@@ -28,25 +48,5 @@
         "name": "Player",
         "score": 26,
         "distance": 32
-    },
-    {
-        "name": "Player",
-        "score": 24,
-        "distance": 43
-    },
-    {
-        "name": "Player",
-        "score": 23,
-        "distance": 36
-    },
-    {
-        "name": "Player",
-        "score": 22,
-        "distance": 57
-    },
-    {
-        "name": "Player",
-        "score": 19,
-        "distance": 34
     }
 ]
